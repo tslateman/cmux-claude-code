@@ -1,0 +1,10 @@
+{
+  "name": "cmux-claude-code",
+  "version": "0.1.0",
+  "description": "cmux sidebar status, tool progress, and notifications for Claude Code sessions",
+  "author": {
+    "name": "Tim Slater"
+  },
+  "license": "MIT",
+  "keywords": ["cmux", "terminal", "status", "notifications"]
+}
