@@ -1,10 +1,12 @@
 #!/bin/bash
 # Forward Claude Code notifications to cmux
-[ -z "$CMUX_WORKSPACE_ID" ] && exit 0
+CMUX=/Applications/cmux.app/Contents/Resources/bin/cmux
+[ ! -x "$CMUX" ] && exit 0
+"$CMUX" identify >/dev/null 2>&1 || exit 0
 
 INPUT=$(cat 2>/dev/null)
 if [ -n "$INPUT" ]; then
-    echo "$INPUT" | cmux claude-hook notification 2>/dev/null || true
+    echo "$INPUT" | "$CMUX" claude-hook notification 2>/dev/null || true
 else
-    cmux claude-hook notification 2>/dev/null || true
+    "$CMUX" claude-hook notification 2>/dev/null || true
 fi
