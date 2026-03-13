@@ -1,8 +1,7 @@
 #!/bin/bash
 # Update cmux sidebar with active tool name and progress
-CMUX=/Applications/cmux.app/Contents/Resources/bin/cmux
-[ ! -x "$CMUX" ] && exit 0
-"$CMUX" identify >/dev/null 2>&1 || exit 0
+source "$(dirname "$0")/cmux-common.sh"
+cmux_available || exit 0
 
 INPUT=$(cat 2>/dev/null)
 [ -z "$INPUT" ] && exit 0
@@ -31,7 +30,7 @@ except:
 
 [ -z "$TOOL" ] && exit 0
 
-"$CMUX" set-status tool "$TOOL" --color "#f0a500" 2>/dev/null || true
+cmux_run set-status tool "$TOOL" --color "#f0a500" || true
 
 # Progress: logarithmic scale, caps at 0.95
 SURFACE_ID="${CMUX_SURFACE_ID:-$("$CMUX" identify --json 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['caller']['surface_ref'])" 2>/dev/null || echo default)}"
@@ -41,4 +40,4 @@ COUNT=$((COUNT + 1))
 echo "$COUNT" > "$COUNTER_FILE"
 
 PROGRESS=$(python3 -c "n=$COUNT; print(f'{min(0.95, n/(n+10)):.3f}')" 2>/dev/null)
-[ -n "$PROGRESS" ] && "$CMUX" set-progress "$PROGRESS" --label "$COUNT tools" 2>/dev/null || true
+[ -n "$PROGRESS" ] && cmux_run set-progress "$PROGRESS" --label "$COUNT tools" || true
