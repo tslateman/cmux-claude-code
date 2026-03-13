@@ -14,7 +14,7 @@ A Claude Code plugin that updates the [cmux](https://cmux.app) sidebar with live
 
 The progress bar uses a logarithmic scale — grows fast on early tool calls, slows as they accumulate, and fills to 100% only when Claude finishes.
 
-Scripts are no-ops outside a cmux workspace (`$CMUX_WORKSPACE_ID` unset) — safe to install globally.
+Scripts are no-ops outside a cmux workspace (detected via `cmux identify`) — safe to install globally.
 
 ## Installation
 
