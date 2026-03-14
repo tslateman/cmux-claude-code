@@ -33,8 +33,7 @@ except:
 cmux_run set-status tool "$TOOL" --color "#f0a500" || true
 
 # Progress: logarithmic scale, caps at 0.95
-SURFACE_ID="${CMUX_SURFACE_ID:-$("$CMUX" identify --json 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['caller']['surface_ref'])" 2>/dev/null || echo default)}"
-COUNTER_FILE="/tmp/cmux-progress-${SURFACE_ID}"
+COUNTER_FILE="/tmp/cmux-progress-$(cmux_surface_id)"
 COUNT=$(cat "$COUNTER_FILE" 2>/dev/null || echo 0)
 COUNT=$((COUNT + 1))
 echo "$COUNT" > "$COUNTER_FILE"

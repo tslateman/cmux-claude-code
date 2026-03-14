@@ -20,3 +20,8 @@ cmux_run() {
     [ -n "$output" ] && echo "$output"
     return 0
 }
+
+# Resolve surface ID: env var first, then socket-based identify
+cmux_surface_id() {
+    echo "${CMUX_SURFACE_ID:-$("$CMUX" identify --json 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['caller']['surface_ref'])" 2>/dev/null || echo default)}"
+}

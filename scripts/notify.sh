@@ -34,8 +34,7 @@ cmux_run clear-status tool || true
 if [ "$STOP_REASON" = "end_turn" ]; then
     cmux_run set-status state "Done" --color "#50c878" || true
     cmux_run set-progress 1.0 || true
-    SURFACE_ID="${CMUX_SURFACE_ID:-$("$CMUX" identify --json 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['caller']['surface_ref'])" 2>/dev/null || echo default)}"
-    rm -f "/tmp/cmux-progress-${SURFACE_ID}"
+    rm -f "/tmp/cmux-progress-$(cmux_surface_id)"
 fi
 
 cmux_run notify --title "Claude Code" --body "$BODY" || true
