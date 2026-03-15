@@ -8,3 +8,4 @@ cmux_available || exit 0
 # Clear stale sidebar state from any previous session
 "$CMUX" clear-status state 2>/dev/null || true
 "$CMUX" clear-progress 2>/dev/null || true
+rm -f "/tmp/cmux-progress-$(cmux_surface_id)"

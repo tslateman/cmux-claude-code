@@ -6,27 +6,29 @@ cmux_available || exit 0
 INPUT=$(cat 2>/dev/null)
 [ -z "$INPUT" ] && exit 0
 
-TOOL=$(echo "$INPUT" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    tool = d.get('tool_name', '')
-    labels = {
-        'Bash':      '⚡ Bash',
-        'Read':      '📖 Read',
-        'Write':     '✏️  Write',
-        'Edit':      '✏️  Edit',
-        'Glob':      '🔍 Glob',
-        'Grep':      '🔍 Grep',
-        'WebFetch':  '🌐 Fetch',
-        'WebSearch': '🌐 Search',
-        'Agent':     '🤖 Agent',
-        'Task':      '🤖 Task',
-    }
-    print(labels.get(tool, tool))
-except:
-    pass
-" 2>/dev/null)
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null)
+[ -z "$TOOL_NAME" ] && exit 0
+
+case "$TOOL_NAME" in
+    Bash)         TOOL="⚡ Bash" ;;
+    Read)         TOOL="📖 Read" ;;
+    Write)        TOOL="✏️  Write" ;;
+    Edit)         TOOL="✏️  Edit" ;;
+    Glob)         TOOL="🔍 Glob" ;;
+    Grep)         TOOL="🔍 Grep" ;;
+    WebFetch)     TOOL="🌐 Fetch" ;;
+    WebSearch)    TOOL="🌐 Search" ;;
+    Agent)        TOOL="🤖 Agent" ;;
+    Task)         TOOL="🤖 Task" ;;
+    LSP)          TOOL="🔧 LSP" ;;
+    NotebookEdit) TOOL="📓 Notebook" ;;
+    NotebookRead) TOOL="📓 Notebook" ;;
+    Skill)        TOOL="🎯 Skill" ;;
+    TodoRead)     TOOL="📋 Todo" ;;
+    TodoWrite)    TOOL="📋 Todo" ;;
+    mcp__*)       TOOL="🔌 ${TOOL_NAME##*__}" ;;
+    *)            TOOL="$TOOL_NAME" ;;
+esac
 
 [ -z "$TOOL" ] && exit 0
 
@@ -38,5 +40,5 @@ COUNT=$(cat "$COUNTER_FILE" 2>/dev/null || echo 0)
 COUNT=$((COUNT + 1))
 echo "$COUNT" > "$COUNTER_FILE"
 
-PROGRESS=$(python3 -c "n=$COUNT; print(f'{min(0.95, n/(n+10)):.3f}')" 2>/dev/null)
+PROGRESS=$(awk "BEGIN { n=$COUNT; p=n/(n+10); if(p>0.95) p=0.95; printf \"%.3f\", p }")
 [ -n "$PROGRESS" ] && cmux_run set-progress "$PROGRESS" --label "$COUNT tools" || true

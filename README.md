@@ -36,7 +36,7 @@ git -C ~/.claude/plugins/cmux-claude-code pull
 
 Or run the install script again; it pulls if already installed.
 
-Requires [cmux](https://cmux.app) with the CLI at `/Applications/cmux.app/Contents/Resources/bin/cmux`.
+Requires [cmux](https://cmux.app) with the CLI at `/Applications/cmux.app/Contents/Resources/bin/cmux` and [jq](https://jqlang.github.io/jq/) for JSON parsing.
 
 ## Hooks
 

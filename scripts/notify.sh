@@ -9,23 +9,13 @@ STOP_REASON="end_turn"
 BODY="Task complete"
 
 if [ -n "$INPUT" ]; then
-    PARSED=$(echo "$INPUT" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    reason = d.get('stop_reason', 'end_turn')
-    if reason == 'end_turn':
-        msg = 'Done — check your terminal'
-    elif reason == 'tool_use':
-        msg = 'Waiting for tool result'
-    else:
-        msg = 'Task complete'
-    print(f'{reason}|{msg}')
-except:
-    print('end_turn|Task complete')
-" 2>/dev/null)
-    STOP_REASON="${PARSED%%|*}"
-    BODY="${PARSED#*|}"
+    STOP_REASON=$(echo "$INPUT" | jq -r '.stop_reason // "end_turn"' 2>/dev/null)
+    STOP_REASON="${STOP_REASON:-end_turn}"
+    case "$STOP_REASON" in
+        end_turn) BODY="Done — check your terminal" ;;
+        tool_use) BODY="Waiting for tool result" ;;
+        *)        BODY="Task complete" ;;
+    esac
 fi
 
 # Clear tool status
