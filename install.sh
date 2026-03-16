@@ -6,7 +6,8 @@ REPO="https://github.com/tslateman/cmux-claude-code.git"
 PLUGINS_JSON="${HOME}/.claude/plugins/installed_plugins.json"
 
 if [ -d "$DEST" ]; then
-  git -C "$DEST" pull --ff-only
+  git -C "$DEST" fetch origin
+  git -C "$DEST" reset --hard origin/main
   echo "cmux-claude-code updated."
 else
   mkdir -p "$(dirname "$DEST")"
