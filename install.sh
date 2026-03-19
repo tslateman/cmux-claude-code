@@ -36,8 +36,22 @@ if command -v jq &>/dev/null; then
       gitCommitSha: $sha
     }]' "$PLUGINS_JSON" >"$PLUGINS_JSON.tmp" &&
     mv "$PLUGINS_JSON.tmp" "$PLUGINS_JSON"
-  echo "cmux-claude-code registered. Restart Claude to load."
+  echo "cmux-claude-code registered."
 else
   echo "jq required for plugin registration. Install with: brew install jq"
   exit 1
 fi
+
+# Enable plugin in settings.json
+SETTINGS_JSON="${HOME}/.claude/settings.json"
+if [ -f "$SETTINGS_JSON" ]; then
+  if jq -e '.enabledPlugins' "$SETTINGS_JSON" >/dev/null 2>&1; then
+    jq '.enabledPlugins["cmux-claude-code@local"] = true' "$SETTINGS_JSON" >"$SETTINGS_JSON.tmp" &&
+      mv "$SETTINGS_JSON.tmp" "$SETTINGS_JSON"
+  else
+    jq '.enabledPlugins = {"cmux-claude-code@local": true}' "$SETTINGS_JSON" >"$SETTINGS_JSON.tmp" &&
+      mv "$SETTINGS_JSON.tmp" "$SETTINGS_JSON"
+  fi
+fi
+
+echo "Restart Claude to load."
