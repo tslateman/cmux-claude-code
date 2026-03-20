@@ -5,6 +5,9 @@ cmux_available || exit 0
 
 SURFACE_ID=$(cmux_surface_id)
 
+# Signal cmux that the session ended cleanly
+echo '{}' | "$CMUX" claude-hook stop 2>/dev/null || true
+
 cmux_run clear-status state 2>/dev/null || true
 cmux_run clear-progress 2>/dev/null || true
 
