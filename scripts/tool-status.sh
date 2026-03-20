@@ -26,6 +26,7 @@ case "$TOOL_NAME" in
     Skill)        TOOL="🎯 Skill" ;;
     TodoRead)     TOOL="📋 Todo" ;;
     TodoWrite)    TOOL="📋 Todo" ;;
+    ToolSearch)   TOOL="🔍 ToolSearch" ;;
     mcp__*)       TOOL="🔌 ${TOOL_NAME##*__}" ;;
     *)            TOOL="$TOOL_NAME" ;;
 esac
